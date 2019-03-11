@@ -232,7 +232,6 @@ abstract class ZoopResource implements JsonSerializable
     {
         $http_sess = $this->zoop->getSession();
         $body = null;
-        var_dump($path);
         if ($payload !== null) {
             $body = json_encode($payload, JSON_UNESCAPED_SLASHES);
             if ($body) {    // if it's json serializable
@@ -250,7 +249,6 @@ abstract class ZoopResource implements JsonSerializable
 
         $code = $http_response->status_code;
         $response_body = $http_response->body;
-        var_dump($response_body);
         if ($code >= 200 && $code < 300) {
             return json_decode($response_body);
         } elseif ($code == 401) {

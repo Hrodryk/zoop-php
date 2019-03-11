@@ -1,21 +1,21 @@
 <?php
 
-namespace Moip\Resource;
+namespace Zoop\Resource;
 
 use ArrayIterator;
-use Moip\Helper\Filters;
-use Moip\Helper\Pagination;
+use Zoop\Helper\Filters;
+use Zoop\Helper\Pagination;
 use stdClass;
 
 /**
- * Class Orders.
+ * Class Transactions.
  */
-class Orders extends MoipResource
+class Transactions extends ZoopResource
 {
     /**
      * @const string
      */
-    const PATH = 'orders';
+    const PATH = 'marketplaces/%s/transactions';
 
     /**
      * Defines what kind of payee as pripmary.
@@ -39,18 +39,18 @@ class Orders extends MoipResource
     const AMOUNT_CURRENCY = 'BRL';
 
     /**
-     * @var \Moip\Resource\Orders
+     * @var \Zoop\Resource\Transactions
      **/
-    private $orders;
+    private $transactions;
 
     /**
-     * Adds a new item to order.
+     * Adds a new item to transaction.
      *
      * @param string $product  Name of the product.
      * @param int    $quantity Product Quantity.
      * @param string $detail   Additional product description.
      * @param int    $price    Initial value of the item.
-     * @param string category  Product category. see: https://dev.moip.com.br/v2.1/reference#tabela-de-categorias-de-produtos.
+     * @param string category  Product category. see: https://dev.zoop.com.br/v2.1/reference#tabela-de-categorias-de-produtos.
      *
      * @return $this
      */
@@ -76,21 +76,21 @@ class Orders extends MoipResource
     }
 
     /**
-     *  Adds a new receiver to order.
+     *  Adds a new receiver to transaction.
      *
-     * @param string $moipAccount Id MoIP MoIP account that will receive payment values.
+     * @param string $zoopAccount Id MoIP MoIP account that will receive payment values.
      * @param string $type        Define qual o tipo de recebedor do pagamento, valores possíveis: PRIMARY, SECONDARY.
      * @param int    $fixed       Value that the receiver will receive.
      * @param int    $percentual  Percentual value that the receiver will receive. Possible values: 0 - 100
-     * @param bool   $feePayor    Flag to know if receiver is the payer of Moip tax.
+     * @param bool   $feePayor    Flag to know if receiver is the payer of Zoop tax.
      *
      * @return $this
      */
-    public function addReceiver($moipAccount, $type, $fixed = null, $percentual = null, $feePayor = false)
+    public function addReceiver($zoopAccount, $type, $fixed = null, $percentual = null, $feePayor = false)
     {
         $receiver = new stdClass();
-        $receiver->moipAccount = new stdClass();
-        $receiver->moipAccount->id = $moipAccount;
+        $receiver->zoopAccount = new stdClass();
+        $receiver->zoopAccount->id = $zoopAccount;
         if (!empty($fixed)) {
             $receiver->amount = new stdClass();
             $receiver->amount->fixed = $fixed;
@@ -115,7 +115,7 @@ class Orders extends MoipResource
         $this->data = new stdClass();
         $this->data->ownId = null;
         $this->data->amount = new stdClass();
-        $this->data->amount->currency = self::AMOUNT_CURRENCY;
+        $this->data->currency = self::AMOUNT_CURRENCY;
         $this->data->amount->subtotals = new stdClass();
         $this->data->items = [];
         $this->data->receivers = [];
@@ -135,42 +135,26 @@ class Orders extends MoipResource
     }
 
     /**
-     * Mount the structure of order.
+     * Mount the structure of transaction.
      *
      * @param \stdClass $response
      *
-     * @return Orders Response order.
+     * @return Transactions Response transaction.
      */
     protected function populate(stdClass $response)
     {
-        $this->orders = clone $this;
-        $this->orders->data->id = $response->id;
-        $this->orders->data->ownId = $response->ownId;
-        $this->orders->data->createdAt = $response->createdAt;
-        $this->orders->data->updatedAt = $response->updatedAt;
-        $this->orders->data->amount->paid = $response->amount->paid;
-        $this->orders->data->amount->total = $response->amount->total;
-        $this->orders->data->amount->fees = $response->amount->fees;
-        $this->orders->data->amount->refunds = $response->amount->refunds;
-        $this->orders->data->amount->liquid = $response->amount->liquid;
-        $this->orders->data->amount->otherReceivers = $response->amount->otherReceivers;
-        $this->orders->data->amount->subtotals = $response->amount->subtotals;
-        $this->orders->data->items = $response->items;
-        $customer = new Customer($this->moip);
-        $this->orders->data->customer = $customer->populate($response->customer);
+        $this->transactions = clone $this;
+        $this->transactions->data->id = $response->id;
+				$this->transactions->data->status = $response->status;
+				$this->transactions->data->amount = $response->amount;
+				$this->transactions->data->original_amount = $response->original_amount;
+				$this->transactions->data->currency = $response->currency;
+				$this->transactions->data->payment_type = $response->payment_type;
+				$this->transactions->data->on_behalf_of = $response->on_behalf_of;
+				$this->transactions->data->buyer = $response->buyer;
+				$this->transactions->data->reference_id = $response->reference_id;
 
-        $this->orders->data->payments = $this->structure($response, Payment::PATH, Payment::class);
-        $this->orders->data->escrows = $this->structure($response, Payment::PATH, Escrow::class);
-        $this->orders->data->refunds = $this->structure($response, Refund::PATH, Refund::class);
-        $this->orders->data->entries = $this->structure($response, Entry::PATH, Entry::class);
-        $this->orders->data->events = $this->structure($response, Event::PATH, Event::class);
-
-        $this->orders->data->receivers = $this->getIfSet('receivers', $response);
-
-        $this->orders->data->status = $response->status;
-        $this->orders->data->_links = $response->_links;
-
-        return $this->orders;
+        return $this->transactions;
     }
 
     /**
@@ -178,7 +162,7 @@ class Orders extends MoipResource
      *
      * @param stdClass                                                                               $response
      * @param string                                                                                 $resource
-     * @param \Moip\Resource\Payment|\Moip\Resource\Refund|\Moip\Resource\Entry|\Moip\Resource\Event $class
+     * @param \Zoop\Resource\Payment|\Zoop\Resource\Refund|\Zoop\Resource\Entry|\Zoop\Resource\Event $class
      *
      * @return array
      */
@@ -187,7 +171,7 @@ class Orders extends MoipResource
         $structures = [];
 
         foreach ($response->$resource as $responseResource) {
-            $structure = new $class($this->orders->moip);
+            $structure = new $class($this->transactions->zoop);
             $structure->populate($responseResource);
 
             $structures[] = $structure;
@@ -197,29 +181,29 @@ class Orders extends MoipResource
     }
 
     /**
-     * Create a new order in MoIP.
+     * Create a new transaction in MoIP.
      *
-     * @return \Moip\Resource\Orders|stdClass
+     * @return \Zoop\Resource\Transactions|stdClass
      */
     public function create()
     {
-        return $this->createResource(sprintf('/%s/%s', MoipResource::VERSION, self::PATH));
+        return $this->createResource(sprintf('/%s/%s/', ZoopResource::VERSION, sprintf(self::PATH, $this->zoop->getMarketplaceId())));
     }
 
     /**
-     * Get an order in MoIP.
+     * Get an transaction in MoIP.
      *
-     * @param string $id_moip Id MoIP order id
+     * @param string $id_zoop Id MoIP transaction id
      *
      * @return stdClass
      */
-    public function get($id_moip)
+    public function get($id_zoop)
     {
-        return $this->getByPath(sprintf('/%s/%s/%s', MoipResource::VERSION, self::PATH, $id_moip));
+        return $this->getByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, self::PATH, $id_zoop));
     }
 
     /**
-     * Get MoIP order id.
+     * Get MoIP transaction id.
      *
      * @return string
      */
@@ -239,7 +223,7 @@ class Orders extends MoipResource
     }
 
     /**
-     * Get paid value of order.
+     * Get paid value of transaction.
      *
      * @return int|float
      */
@@ -249,7 +233,7 @@ class Orders extends MoipResource
     }
 
     /**
-     * Get total value of order.
+     * Get total value of transaction.
      *
      * @return int|float
      */
@@ -367,13 +351,13 @@ class Orders extends MoipResource
     }
 
     /**
-     * Get Customer associated with the request.
+     * Get Buyer associated with the request.
      *
-     * @return \Moip\Resource\Customer
+     * @return \Zoop\Resource\Buyer
      */
-    public function getCustomer()
+    public function getBuyer()
     {
-        return $this->data->customer;
+        return $this->data->buyer;
     }
 
     /**
@@ -517,7 +501,7 @@ class Orders extends MoipResource
     }
 
     /**
-     * Get order status.
+     * Get transaction status.
      * Possible values: CREATED, WAITING, PAID, NOT_PAID, REVERTED.
      *
      * @return string
@@ -548,7 +532,7 @@ class Orders extends MoipResource
     }
 
     /**
-     * Get checkout preferences of the order.
+     * Get checkout preferences of the transaction.
      *
      * @return string
      */
@@ -558,26 +542,26 @@ class Orders extends MoipResource
     }
 
     /**
-     * Create a new Orders list instance.
+     * Create a new Transactions list instance.
      *
-     * @return \Moip\Resource\OrdersList
+     * @return \Zoop\Resource\TransactionsList
      */
     public function getList(Pagination $pagination = null, Filters $filters = null, $qParam = '')
     {
-        $orderList = new OrdersList($this->moip);
+        $transactionList = new TransactionsList($this->zoop);
 
-        return $orderList->get($pagination, $filters, $qParam);
+        return $transactionList->get($pagination, $filters, $qParam);
     }
 
     /**
      * Structure of payment.
      *
-     * @return \Moip\Resource\Payment
+     * @return \Zoop\Resource\Payment
      */
     public function payments()
     {
-        $payment = new Payment($this->moip);
-        $payment->setOrder($this);
+        $payment = new Payment($this->zoop);
+        $payment->setTransaction($this);
 
         return $payment;
     }
@@ -585,12 +569,12 @@ class Orders extends MoipResource
     /**
      * Structure of refund.
      *
-     * @return \Moip\Resource\Refund
+     * @return \Zoop\Resource\Refund
      */
     public function refunds()
     {
-        $refund = new Refund($this->moip);
-        $refund->setOrder($this);
+        $refund = new Refund($this->zoop);
+        $refund->setTransaction($this);
 
         return $refund;
     }
@@ -612,33 +596,72 @@ class Orders extends MoipResource
         return $this;
     }
 
-    /**
-     * Set customer associated with the order.
+		/**
+     * Set value to the transaction.
      *
-     * @param \Moip\Resource\Customer $customer customer associated with the request.
+     * @param int|float $amount value to the transaction.
      *
      * @return $this
      */
-    public function setCustomer(Customer $customer)
+    public function setAmount($amount)
     {
-        $this->data->customer = $customer;
+        $this->data->amount = (float) $amount;
+
+        return $this;
+    }
+
+		/**
+     * Set payment type of the transaction.
+     *
+     * @param string $paymentType payment type of the transaction.
+     *
+     * @return $this
+     */
+    public function setPaymentType($paymentType)
+    {
+        $this->data->payment_type = $paymentType;
+
+        return $this;
+    }
+
+		/**
+		* Set seller id associated with the transaction.
+		*
+		* @param string $id Seller's id.
+		*
+		* @return $this
+		*/
+		public function setSellerId($id)
+		{
+			$this->data->on_behalf_of = $id;
+
+			return $this;
+		}
+
+    /**
+     * Set buyer associated with the transaction.
+     *
+     * @param \Zoop\Resource\Buyer $buyer buyer associated with the request.
+     *
+     * @return $this
+     */
+    public function setBuyer(Buyer $buyer)
+    {
+        $this->data->customer = $buyer->getId();
 
         return $this;
     }
 
     /**
-     * Set customer id associated with the order.
+     * Set buyer id associated with the transaction.
      *
-     * @param string $id Customer's id.
+     * @param string $id Buyer's id.
      *
      * @return $this
      */
-    public function setCustomerId($id)
+    public function setBuyerId($id)
     {
-        if (!isset($this->data->customer)) {
-            $this->data->customer = new stdClass();
-        }
-        $this->data->customer->id = $id;
+        $this->data->customer = $id;
 
         return $this;
     }
@@ -680,9 +703,9 @@ class Orders extends MoipResource
      *
      * @return $this
      */
-    public function setOwnId($ownId)
+    public function setReferenceId($referenceId)
     {
-        $this->data->ownId = $ownId;
+        $this->data->reference_id = $referenceId;
 
         return $this;
     }

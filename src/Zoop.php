@@ -8,11 +8,11 @@ use Zoop\Resource\Balances;
 use Zoop\Resource\BankAccount;
 use Zoop\Resource\Buyer;
 use Zoop\Resource\Entry;
-use Zoop\Resource\Holder;
+use Zoop\Resource\CardToken;
 use Zoop\Resource\Keys;
-use Zoop\Resource\Multiorders;
+use Zoop\Resource\Multitransactions;
 use Zoop\Resource\NotificationPreferences;
-use Zoop\Resource\Orders;
+use Zoop\Resource\Transactions;
 use Zoop\Resource\Payment;
 use Zoop\Resource\Refund;
 use Zoop\Resource\Transfers;
@@ -134,13 +134,13 @@ class Zoop
     }
 
     /**
-     * Create a new Holder instance.
+     * Create a new CardToken instance.
      *
-     * @return \Zoop\Resource\Holder
+     * @return \Zoop\Resource\CardToken
      */
-    public function holders()
+    public function cardTokens()
     {
-        return new Holder($this);
+        return new CardToken($this);
     }
 
     /**
@@ -164,13 +164,13 @@ class Zoop
     }
 
     /**
-     * Create a new Orders instance.
+     * Create a new Transactions instance.
      *
-     * @return \Zoop\Resource\Orders
+     * @return \Zoop\Resource\Transactions
      */
-    public function orders()
+    public function transactions()
     {
-        return new Orders($this);
+        return new Transactions($this);
     }
 
     /**
@@ -184,13 +184,13 @@ class Zoop
     }
 
     /**
-     * Create a new Multiorders instance.
+     * Create a new Multitransactions instance.
      *
-     * @return \Zoop\Resource\Multiorders
+     * @return \Zoop\Resource\Multitransactions
      */
-    public function multiorders()
+    public function multitransactions()
     {
-        return new Multiorders($this);
+        return new Multitransactions($this);
     }
 
     /**

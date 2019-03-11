@@ -112,7 +112,7 @@ class Buyer extends ZoopResource
      */
     public function get($zoop_id)
     {
-        return $this->getByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, self::PATH, $zoop_id));
+        return $this->getByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, sprintf(self::PATH, $this->zoop->getMarketplaceId()), $zoop_id));
     }
 
     /**
@@ -237,26 +237,40 @@ class Buyer extends ZoopResource
         $buyer = clone $this;
         $buyer->data = new stdClass();
         $buyer->data->id = $this->getIfSet('id', $response);
-        $buyer->data->ownId = $this->getIfSet('ownId', $response);
-        $buyer->data->fullname = $this->getIfSet('fullname', $response);
-        $buyer->data->email = $this->getIfSet('email', $response);
-        $buyer->data->phone = new stdClass();
+        $buyer->data->status = $this->getIfSet('status', $response);
+        $buyer->data->resource = $this->getIfSet('resource', $response);
+        $buyer->data->account_balance = $this->getIfSet('account_balance', $response);
+				$buyer->data->current_balance = $this->getIfSet('current_balance', $response);
+				$buyer->data->first_name = $this->getIfSet('first_name', $response);
+				$buyer->data->last_name = $this->getIfSet('last_name', $response);
+				$buyer->data->taxpayer_id = $this->getIfSet('taxpayer_id', $response);
+				$buyer->data->description = $this->getIfSet('description', $response);
+				$buyer->data->email = $this->getIfSet('email', $response);
+				$buyer->data->phone_number = $this->getIfSet('phone_number', $response);
+				$buyer->data->facebook = $this->getIfSet('facebook', $response);
+				$buyer->data->twitter = $this->getIfSet('twitter', $response);
+        $buyer->data->address = new stdClass();
 
-        $phone = $this->getIfSet('phone', $response);
+        $address = $this->getIfSet('address', $response);
 
-        $buyer->data->phone->countryCode = $this->getIfSet('countryCode', $phone);
-        $buyer->data->phone->areaCode = $this->getIfSet('areaCode', $phone);
-        $buyer->data->phone->number = $this->getIfSet('number', $phone);
-        $buyer->data->birthDate = $this->getIfSet('birthDate', $response);
-        $buyer->data->taxDocument = new stdClass();
-        $buyer->data->taxDocument->type = $this->getIfSet('type', $this->getIfSet('taxDocument', $response));
-        $buyer->data->taxDocument->number = $this->getIfSet('number', $this->getIfSet('taxDocument', $response));
-        $buyer->data->addresses = [];
-        $buyer->data->shippingAddress = $this->getIfSet('shippingAddress', $response);
-        $buyer->data->billingAddress = $this->getIfSet('billingAddress', $response);
-        $buyer->data->fundingInstrument = $this->getIfSet('fundingInstrument', $response);
+				$buyer->data->address->line1 = $this->getIfSet('line1', $address);
+				$buyer->data->address->line2 = $this->getIfSet('line2', $address);
+				$buyer->data->address->line3 = $this->getIfSet('line3', $address);
+				$buyer->data->address->neighborhood = $this->getIfSet('neighborhood', $address);
+				$buyer->data->address->city = $this->getIfSet('city', $address);
+				$buyer->data->address->state = $this->getIfSet('state', $address);
+				$buyer->data->address->postal_code = $this->getIfSet('postal_code', $address);
+				$buyer->data->address->country_code = $this->getIfSet('country_code', $address);
 
-        $buyer->data->_links = $this->getIfSet('_links', $response);
+				$buyer->data->delinquent = $this->getIfSet('delinquent', $response);
+				$buyer->data->payment_methods = $this->getIfSet('payment_methods', $response);
+				$buyer->data->default_debit = $this->getIfSet('default_debit', $response);
+				$buyer->data->default_credit = $this->getIfSet('default_credit', $response);
+				$buyer->data->default_receipt_delivery_method = $this->getIfSet('default_receipt_delivery_method', $response);
+				$buyer->data->uri = $this->getIfSet('uri', $response);
+				$buyer->data->metadata = $this->getIfSet('metadata', $response);
+				$buyer->data->created_at = $this->getIfSet('created_at', $response);
+				$buyer->data->updated_at = $this->getIfSet('updated_at', $response);
 
         return $buyer;
     }
