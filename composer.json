@@ -1,0 +1,45 @@
+{
+  "name": "hrodryk/zoop-php",
+  "description": "Cliente em PHP para integração server-side com APIs Zoop",
+  "keywords": ["libraries", "zoop", "intermediary", "checkout", "marketplace"],
+  "homepage": "https://github.com/hrodryk/zoop-php",
+  "license": "MIT",
+  "type": "libraries",
+  "support": {
+    "issues": "https://github.com/hrodryk/zoop-php/issues",
+    "source": "https://github.com/hrodryk/zoop-php"
+  },
+  "authors": [
+    {
+      "name": "Rodrigo Vieira",
+      "email": "rvieira.dev@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "rmccue/requests": ">=1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.8.35 || ^5.7 || ^6.4",
+    "codacy/coverage": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zoop\\": "src/"
+    },
+    "files": [
+      "src/Helper/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Zoop\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
+  "minimum-stability": "dev"
+}
