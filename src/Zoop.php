@@ -14,6 +14,7 @@ use Zoop\Resource\Multitransactions;
 use Zoop\Resource\NotificationPreferences;
 use Zoop\Resource\Transactions;
 use Zoop\Resource\Payment;
+use Zoop\Resource\Boleto;
 use Zoop\Resource\Refund;
 use Zoop\Resource\Transfers;
 use Zoop\Resource\WebhookList;
@@ -181,6 +182,16 @@ class Zoop
     public function payments()
     {
         return new Payment($this);
+    }
+
+		/**
+     * Create a new Boleto instance.
+     *
+     * @return \Zoop\Resource\Boleto
+     */
+    public function boletos()
+    {
+        return new Boleto($this);
     }
 
     /**

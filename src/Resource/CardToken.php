@@ -78,6 +78,17 @@ class CardToken extends ZoopResource
 	}
 
 	/**
+	* Get cardToken id.
+	*
+	* @return \stdClass CardToken's id.
+	*/
+	public function getId()
+	{
+		return $this->getIfSet('id');
+	}
+
+
+	/**
 	* Get cardToken address.
 	*
 	* @return \stdClass CardToken's address.
