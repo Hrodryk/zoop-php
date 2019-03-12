@@ -304,6 +304,16 @@ class Transactions extends ZoopResource
 	}
 
 	/**
+	* Get payment method barcode used in the application.
+	*
+	* @return string
+	*/
+	public function getPaymentMethodBarcode()
+	{
+		return $this->getIfSet('barcode', $this->data->payment_method);
+	}
+
+	/**
 	* Get greight value of the item will be added to the value of the items.
 	*
 	* @return int|float
