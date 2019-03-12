@@ -239,7 +239,7 @@ class Buyer extends ZoopResource
         $buyer->data->id = $this->getIfSet('id', $response);
         $buyer->data->status = $this->getIfSet('status', $response);
         $buyer->data->resource = $this->getIfSet('resource', $response);
-        $buyer->data->account_balance = $this->getIfSet('account_balance', $response);
+        $buyer->data->account_balance = $this->getIfSet('account_balance', $response); 
 				$buyer->data->current_balance = $this->getIfSet('current_balance', $response);
 				$buyer->data->first_name = $this->getIfSet('first_name', $response);
 				$buyer->data->last_name = $this->getIfSet('last_name', $response);
