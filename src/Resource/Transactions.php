@@ -113,15 +113,7 @@ class Transactions extends ZoopResource
 	protected function initialize()
 	{
 		$this->data = new stdClass();
-		$this->data->ownId = null;
-		$this->data->amount = new stdClass();
 		$this->data->currency = self::AMOUNT_CURRENCY;
-		$this->data->amount->subtotals = new stdClass();
-		$this->data->items = [];
-		$this->data->receivers = [];
-		$this->data->checkoutPreferences = new stdClass();
-		$this->data->checkoutPreferences->redirectUrls = new stdClass();
-		$this->data->checkoutPreferences->installments = [];
 	}
 
 	/**
@@ -655,6 +647,21 @@ class Transactions extends ZoopResource
 	public function setSellerId($id)
 	{
 		$this->data->on_behalf_of = $id;
+
+		return $this;
+	}
+
+	/**
+	* Set boleto expiration date associated with the transaction.
+	*
+	* @param string $expirationDate Seller's id.
+	*
+	* @return $this
+	*/
+	public function setBoletoExpirationDate($expirationDate)
+	{
+		$this->data->payment_method = new stdClass();
+		$this->data->payment_method->expiration_date = $expirationDate;
 
 		return $this;
 	}
