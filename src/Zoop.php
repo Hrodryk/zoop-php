@@ -9,6 +9,7 @@ use Zoop\Resource\BankAccount;
 use Zoop\Resource\Buyer;
 use Zoop\Resource\Entry;
 use Zoop\Resource\CardToken;
+use Zoop\Resource\BankAccountToken;
 use Zoop\Resource\Keys;
 use Zoop\Resource\Multitransactions;
 use Zoop\Resource\NotificationPreferences;
@@ -142,6 +143,16 @@ class Zoop
     public function cardTokens()
     {
         return new CardToken($this);
+    }
+
+		/**
+     * Create a new BankAccountToken instance.
+     *
+     * @return \Zoop\Resource\BankAccountToken
+     */
+    public function bankAccountTokens()
+    {
+        return new BankAccountToken($this);
     }
 
     /**
