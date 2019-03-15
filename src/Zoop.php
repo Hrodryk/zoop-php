@@ -276,7 +276,7 @@ class Zoop
      *
      * @return BankAccount
      */
-    public function bankaccount()
+    public function bankAccounts()
     {
         return new BankAccount($this);
     }
