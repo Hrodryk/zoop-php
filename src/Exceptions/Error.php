@@ -20,14 +20,14 @@ class Error
      *
      * @var string
      */
-    private $path;
+    private $category;
 
     /**
      * Description of error.
      *
      * @var string
      */
-    private $description;
+    private $message;
 
     /**
      * Error constructor.
@@ -38,11 +38,11 @@ class Error
      * @param string $path        represents the field where the error ocurred.
      * @param string $description error description.
      */
-    public function __construct($code, $path, $description)
+    public function __construct($code, $category, $message)
     {
         $this->code = $code;
-        $this->path = $path;
-        $this->description = $description;
+        $this->category = $category;
+        $this->message = $message;
     }
 
     /**
@@ -60,9 +60,9 @@ class Error
      *
      * @return string
      */
-    public function getPath()
+    public function getCategory()
     {
-        return $this->path;
+        return $this->category;
     }
 
     /**
@@ -70,9 +70,9 @@ class Error
      *
      * @return string
      */
-    public function getDescription()
+    public function getMessage()
     {
-        return $this->description;
+        return $this->message;
     }
 
     /**
@@ -84,16 +84,8 @@ class Error
      */
     public static function parseErrors($json_string)
     {
-        $error_obj = json_decode($json_string);
-        $errors = [];
-        if (!empty($error_obj->errors)) {
-            foreach ($error_obj->errors as $error) {
-                $errors[] = new self($error->code, $error->path, $error->description);
-            }
-        } elseif (!empty($error_obj->error)) {
-            $errors[] = new self('', '', $error_obj->error);
-        }
+        $error = json_decode($json_string)->error;
 
-        return $errors;
+        return new self($error->status_code, $error->category, $error->message);
     }
 }
