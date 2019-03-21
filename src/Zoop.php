@@ -17,6 +17,7 @@ use Zoop\Resource\Transactions;
 use Zoop\Resource\Payment;
 use Zoop\Resource\Boleto;
 use Zoop\Resource\Refund;
+use Zoop\Resource\SplitRules;
 use Zoop\Resource\Transfers;
 use Zoop\Resource\WebhookList;
 use Requests_Session;
@@ -229,6 +230,22 @@ class Zoop
     public function transfers()
     {
         return new Transfers($this);
+    }
+
+		/**
+     * Create a new SplitRules.
+     *
+     * @return \Zoop\Resource\SplitRules
+     */
+
+    /**
+     * Create a new SplitRules instance.
+     *
+     * @return SplitRules
+     */
+    public function splitRules()
+    {
+        return new SplitRules($this);
     }
 
     /**
