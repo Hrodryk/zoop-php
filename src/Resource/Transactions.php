@@ -708,6 +708,13 @@ class Transactions extends ZoopResource
 		return $this;
 	}
 
+	public function setCardTokenId($cardTokenId)
+	{
+		$this->data->token = $cardTokenId;
+
+		return $this;
+	}
+
 	/**
 	* Set discounted value of the item will be subtracted from the total value of the items.
 	*
