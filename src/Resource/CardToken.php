@@ -10,10 +10,10 @@ use stdClass;
 class CardToken extends ZoopResource
 {
 	/**
-	 * Path cardToken API.
-	 *
-	 * @const string
-	 */
+	* Path cardToken API.
+	*
+	* @const string
+	*/
 	const PATH = 'marketplaces/%s/cards/tokens';
 
 	/**
@@ -96,6 +96,36 @@ class CardToken extends ZoopResource
 	public function getBillingAddress()
 	{
 		return $this->getIfSet('billingAddress');
+	}
+
+	/**
+	* Get cardToken address.
+	*
+	* @return \stdClass CardToken's address.
+	*/
+	public function getCardId()
+	{
+		return $this->getIfSet('id', $this->data->card);
+	}
+
+	/**
+	* Get cardToken address.
+	*
+	* @return \stdClass CardToken's address.
+	*/
+	public function getCardFirst4Digits()
+	{
+		return $this->getIfSet('first4_digits', $this->data->card);
+	}
+
+	/**
+	* Get cardToken address.
+	*
+	* @return \stdClass CardToken's address.
+	*/
+	public function getCardBrand()
+	{
+		return $this->getIfSet('card_brand', $this->data->card);
 	}
 
 	/**
