@@ -658,12 +658,24 @@ class Transactions extends ZoopResource
 	*
 	* @return $this
 	*/
-	public function setBoletoExpirationDate($expirationDate)
+	public function setPaymentMethod($expirationDate, $paymentLimitDate)
 	{
 		$this->data->payment_method = new stdClass();
 		$this->data->payment_method->expiration_date = $expirationDate;
+		$this->data->payment_method->payment_limit_date = $paymentLimitDate;
 
 		return $this;
+	}
+
+	public function setInstallmentPlan($mode, $numberInstallments)
+	{
+			$installmentPlan = new stdClass();
+			$installmentPlan->mode = $mode;
+			$installmentPlan->number_installments = $numberInstallments;
+
+			$this->data->installment_plan = $installmentPlan;
+
+			return $this;
 	}
 
 	/**
