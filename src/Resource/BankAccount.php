@@ -43,8 +43,6 @@ class BankAccount extends ZoopResource
 	public function initialize()
 	{
 		$this->data = new stdClass();
-		$this->data->holder = new stdClass();
-		$this->data->holder->taxDocument = new stdClass();
 	}
 
 	/**
@@ -85,6 +83,55 @@ class BankAccount extends ZoopResource
 		return $this;
 	}
 
+	public function setHolderName($holderName)
+	{
+		$this->data->holder_name = $holderName;
+
+		return $this;
+	}
+
+	public function setTaxpayerId($taxpayerId)
+	{
+		$this->data->taxpayer_id = $taxpayerId;
+
+		return $this;
+	}
+
+	public function setBankCode($bankCode)
+	{
+		$this->data->bank_code = $bankCode;
+
+		return $this;
+	}
+
+	public function setType($type)
+	{
+		$this->data->type = $type;
+
+		return $this;
+	}
+
+	public function setAccountNumber($accountNumber)
+	{
+		$this->data->account_number = $accountNumber;
+
+		return $this;
+	}
+
+	public function setRoutingNumber($routingNumber)
+	{
+		$this->data->routing_number = $routingNumber;
+
+		return $this;
+	}
+
+	public function setIsActive($isActive)
+	{
+		$this->data->is_active = $isActive;
+
+		return $this;
+	}
+
 	/**
 	* Set bank account token associated with the transaction.
 	*
@@ -100,20 +147,6 @@ class BankAccount extends ZoopResource
 	}
 
 	/**
-	* Set bank account type.
-	*
-	* @param string $type Bank account type (CHECKING or SAVING).
-	*
-	* @return $this
-	*/
-	public function setType($type)
-	{
-		$this->data->type = $type;
-
-		return $this;
-	}
-
-	/**
 	* Returns bank account type.
 	*
 	* @return string
@@ -121,20 +154,6 @@ class BankAccount extends ZoopResource
 	public function getType()
 	{
 		return $this->getIfSet('type');
-	}
-
-	/**
-	* Set bank number.
-	*
-	* @param string $bank_number Bank number.
-	*
-	* @return $this
-	*/
-	public function setBankNumber($bank_number)
-	{
-		$this->data->bankNumber = $bank_number;
-
-		return $this;
 	}
 
 	/**
@@ -148,20 +167,6 @@ class BankAccount extends ZoopResource
 	}
 
 	/**
-	* Set bank account agency number.
-	*
-	* @param int $agency_number Bank account agency number.
-	*
-	* @return $this
-	*/
-	public function setAgencyNumber($agency_number)
-	{
-		$this->data->agencyNumber = $agency_number;
-
-		return $this;
-	}
-
-	/**
 	* Returns bank account agency number.
 	*
 	* @return int
@@ -169,20 +174,6 @@ class BankAccount extends ZoopResource
 	public function getAgencyNumber()
 	{
 		return $this->getIfSet('agencyNumber');
-	}
-
-	/**
-	* Set bank account agency check number.
-	*
-	* @param int $agency_check_number Bank account agency check number.
-	*
-	* @return $this
-	*/
-	public function setAgencyCheckNumber($agency_check_number)
-	{
-		$this->data->agencyCheckNumber = $agency_check_number;
-
-		return $this;
 	}
 
 	/**
@@ -196,20 +187,6 @@ class BankAccount extends ZoopResource
 	}
 
 	/**
-	* Set bank account number.
-	*
-	* @param int $account_number Bank account number.
-	*
-	* @return $this
-	*/
-	public function setAccountNumber($account_number)
-	{
-		$this->data->accountNumber = $account_number;
-
-		return $this;
-	}
-
-	/**
 	* Returns bank account number.
 	*
 	* @return int
@@ -220,20 +197,6 @@ class BankAccount extends ZoopResource
 	}
 
 	/**
-	* Set bank account check number.
-	*
-	* @param int $account_check_number Bank account check number.
-	*
-	* @return $this
-	*/
-	public function setAccountCheckNumber($account_check_number)
-	{
-		$this->data->accountCheckNumber = $account_check_number;
-
-		return $this;
-	}
-
-	/**
 	* Returns bank account check number.
 	*
 	* @return int
@@ -241,25 +204,6 @@ class BankAccount extends ZoopResource
 	public function getAccountCheckNumber()
 	{
 		return $this->getIfSet('accountCheckNumber');
-	}
-
-	/**
-	* Set holder.
-	*
-	* @param string $fullname Holder full name.
-	* @param string $number   Document number.
-	* @param string $type     Document type (CPF or CNPJ).
-	*
-	* @return $this
-	*/
-	public function setHolder($fullname, $number, $type)
-	{
-		$this->data->holder->fullname = $fullname;
-
-		$this->data->holder->taxDocument->type = $type;
-		$this->data->holder->taxDocument->number = $number;
-
-		return $this;
 	}
 
 	/**
@@ -301,7 +245,7 @@ class BankAccount extends ZoopResource
 	*/
 	public function get($bank_account_id)
 	{
-		return $this->getByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, self::PATH, $bank_account_id));
+		return $this->getByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, sprintf(self::PATH, $this->zoop->getMarketplaceId()), $bank_account_id));
 	}
 
 	/**
@@ -328,6 +272,7 @@ class BankAccount extends ZoopResource
 		return $this->createResource(sprintf('/%s/%s/', ZoopResource::VERSION, sprintf(self::PATH, $this->zoop->getMarketplaceId())));
 	}
 
+
 	/**
 	* Update a bank account.
 	*
@@ -339,7 +284,7 @@ class BankAccount extends ZoopResource
 	{
 		$bank_account_id = (!empty($bank_account_id) ? $bank_account_id : $this->getId());
 
-		return $this->updateByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, self::PATH, $bank_account_id));
+		return $this->updateByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, sprintf(self::PATH, $this->zoop->getMarketplaceId()), $bank_account_id));
 	}
 
 	/**
@@ -351,7 +296,7 @@ class BankAccount extends ZoopResource
 	*/
 	public function delete($bank_account_id)
 	{
-		return $this->deleteByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, self::PATH, $bank_account_id));
+		return $this->deleteByPath(sprintf('/%s/%s/%s', ZoopResource::VERSION, sprintf(self::PATH, $this->zoop->getMarketplaceId()), $bank_account_id));
 	}
 
 	/**
@@ -373,15 +318,6 @@ class BankAccount extends ZoopResource
 		$bank_account->data->type = $this->getIfSet('type', $response);
 		$bank_account->data->agencyCheckNumber = $this->getIfSet('agencyCheckNumber', $response);
 		$bank_account->data->bankNumber = $this->getIfSet('bankNumber', $response);
-
-		$holder = $this->getIfSet('holder', $response);
-		$bank_account->data->holder = new stdClass();
-		$bank_account->data->holder->fullname = $this->getIfSet('fullname', $holder);
-
-		$tax_document = $this->getIfSet('taxDocument', $holder);
-		$bank_account->data->holder->taxDocument = new stdClass();
-		$bank_account->data->holder->taxDocument->number = $this->getIfSet('number', $tax_document);
-		$bank_account->data->holder->taxDocument->type = $this->getIfSet('type', $tax_document);
 
 		$bank_account->data->_links = $this->getIfSet('_links', $response);
 		$bank_account->data->createdAt = $this->getIfSet('createdAt', $response);
